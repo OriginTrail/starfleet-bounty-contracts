@@ -5,7 +5,7 @@ const TestTraceToken = artifacts.require("TestTraceToken");
 
 module.exports = function (deployer, network, accounts) {
     const constants = require('../constants.js')[network];
-    if (constants.staking_address) {
+    if (constants.bounty_address) {
         throw Error(`Contract is already deployed on ${network}, remove the file first before deployment`);
     }
 

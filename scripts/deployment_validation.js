@@ -16,7 +16,7 @@ if (argv.hasOwnProperty('network')) {
 console.log(`Using network ${network}`);
 
 // Verify that the network is okay to be used
-if (!['testnet', 'mainnet', 'development', 'ganache'].includes(network)) {
+if (!['testnet', 'mainnet', 'development', 'ganache', 'xdai'].includes(network)) {
     throw Error(`Network "${network}" is not supported!`);
 }
 
@@ -37,7 +37,7 @@ if (!wallet) {
 //      Load contract abi
 const bountyContractAbi = require('../build/contracts/StarfleetBounty').abi;
 //      Load contract address
-const bountyContractAddress = constants.staking_address;
+const bountyContractAddress = constants.bounty_address;
 if (!bountyContractAddress) {
     throw Error(`Staking contract does not exist for network "${network}"!`);
 }

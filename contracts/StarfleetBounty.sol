@@ -38,12 +38,27 @@ contract StarfleetBounty is Ownable {
         }
     }
 
+    function getTokenAddress() public view returns (address) {
+        return address(token);
+    }
+
     function enableWithdrawals() onlyOwner public {
+        require(bounty_period_end == 0, "Cannot reenable withdrawals");
         withdrawals_enabled = true;
         bounty_period_end = now.add(BOUNTY_PERIOD_LENGTH);
     }
 
-    function stakeTokens(address[] memory contributors, uint256[] memory amounts, bool allowOverwriting) onlyOwner public {
+    function cancelWithdrawals() public onlyOwner {
+        withdrawals_enabled = false;
+        uint256 amount = token.balanceOf(address(this));
+
+        bool transaction_result = token.transfer(msg.sender, amount);
+        require(transaction_result, "Token transaction execution failed!");
+
+        emit ContractCancelled();
+    }
+
+    function assignBounty(address[] memory contributors, uint256[] memory amounts, bool allowOverwriting) onlyOwner public {
         // make sure not to overwrite by accident
         if (!allowOverwriting){
             for (uint i = 0; i < contributors.length; i++) {
@@ -62,23 +77,16 @@ contract StarfleetBounty is Ownable {
 
     // Functional requirement FR2
     function withdrawTokens() public {
-        require(bounty[msg.sender] > 0, "Cannot withdraw if there are no tokens staked with this address");
-        uint256 amount = bounty[msg.sender];
-        bounty[msg.sender] = 0;
+        require(withdrawals_enabled, "Withdrawals are disabled at this time!");
 
+        uint256 amount = bounty[msg.sender];
+
+        require(amount > 0, "Cannot withdraw if there are no tokens staked with this address");
         require(token.balanceOf(address(this)) >= amount, "Contract does not have enough tokens to execute withdrawal!");
+        bounty[msg.sender] = 0;
 
         bool transaction_result = token.transfer(msg.sender, amount);
         require(transaction_result, "Token transaction execution failed!");
         emit BountyWithdrawn(msg.sender, amount);
-    }
-
-    function cancel() public onlyOwner {
-        withdrawals_enabled = false;
-        uint256 amount = token.balanceOf(address(this));
-
-        bool transaction_result = token.transfer(msg.sender, amount);
-        require(transaction_result, "Token transaction execution failed!");
-        emit ContractCancelled();
     }
 }
