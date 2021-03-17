@@ -74,6 +74,10 @@ contract StarfleetBounty is Ownable {
             }
         }
     }
+    
+    function getContributorBounty(address contributor) public view returns (uint256){
+        return bounty[contributor];
+    }
 
     // Functional requirement FR2
     function withdrawTokens() public {
