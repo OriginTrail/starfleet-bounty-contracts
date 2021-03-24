@@ -16,13 +16,11 @@ if (argv.hasOwnProperty('network')) {
 console.log(`Using network ${network}`);
 
 // Verify that the network is okay to be used
-if (!['testnet', 'mainnet', 'development', 'ganache', 'xdai'].includes(network)) {
+if (!['testnet', 'mainnet', 'development', 'staging', 'ganache', 'xdai'].includes(network)) {
     throw Error(`Network "${network}" is not supported!`);
 }
 
 const constants = require('../constants.js')[network];
-
-console.log(`Loaded constants: ${JSON.stringify(constants, null, 4)}`);
 
 // Load web3
 const web3 = new Web3(new Web3.providers.HttpProvider(constants.rpc_endpoint));
@@ -67,56 +65,17 @@ function reportError(message, expected, actual) {
 }
 
 async function main() {
-    console.log('Getting balance of bounty contract');
-    let balance = await tokenContract.methods.balanceOf(bountyContractAddress).call();
-    console.log(`Initial balance: ${balance}`);
+    console.log('Getting data of bounty contract');
+    console.log(`\tContract address:  ${bountyContract.options.address}`);
 
-    balance = await tokenContract.methods.balanceOf(wallet.address).call();
-    console.log(`Wallet balance: ${balance}`);
+    let owner = await bountyContract.methods.owner().call();
+    console.log(`\tOwner wallet:  ${owner}`);
 
-    balance = await tokenContract.methods.balanceOf(bountyContractAddress).call();
-    console.log(`Balance after deposit: ${balance}`);
+    let tokenAddress = await bountyContract.methods.getTokenAddress().call();
+    console.log(`\tToken address: ${tokenAddress}`);
 
-    const receiver = '0xaeAfe9f7842E98e31053C926C848A3291A35bB95';
-    const receiverPK = '0x1ae91aa113828d346a9030d08a2f6d0ff8af57de4634d4fb6473fbd380740d25';
-    let allowed = await bountyContract.methods.bounty(receiver).call();
-    console.log(`Initial allowed: ${allowed}`);
-
-    let data = bountyContract.methods.stakeTokens([receiver], ["1000000000000000000"], true).encodeABI();
-    let createTransaction = await web3.eth.accounts.signTransaction({
-        from: wallet.address,
-        to: bountyContractAddress,
-        data,
-        value: "0x00",
-        gas: "400000",
-        gasPrice: "1000000000",
-    }, wallet.privateKey);
-    let createReceipt = await web3.eth.sendSignedTransaction(createTransaction.rawTransaction);
-    console.log(JSON.stringify(createReceipt, null, 4));
-
-    allowed = await bountyContract.methods.bounty(receiver).call();
-    console.log(`Allowed after deposit: ${allowed}`);
-
-    balance = await tokenContract.methods.balanceOf(receiver).call();
-    console.log(`Initial balance: ${balance}`);
-
-    data = bountyContract.methods.withdrawTokens().encodeABI();
-    createTransaction = await web3.eth.accounts.signTransaction({
-        from: receiver,
-        to: bountyContractAddress,
-        data,
-        value: "0x00",
-        gas: "400000",
-        gasPrice: "1000000000",
-    }, receiverPK);
-    createReceipt = await web3.eth.sendSignedTransaction(createTransaction.rawTransaction);
-    console.log(JSON.stringify(createReceipt, null, 4));
-
-    allowed = await bountyContract.methods.bounty(receiver).call();
-    console.log(`Allowed after withdrawal: ${allowed}`);
-
-    balance = await tokenContract.methods.balanceOf(receiver).call();
-    console.log(`Balance after withdrawal: ${balance}`);
+    let withdrawalsEnabled = await bountyContract.methods.withdrawals_enabled().call();
+    console.log(`\tCan withdraw:  ${withdrawalsEnabled}`);
 
     return 0;
 }

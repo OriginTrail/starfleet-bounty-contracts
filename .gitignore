@@ -11,3 +11,5 @@ coverage.json
 .rpc
 .secret
 .env
+scripts/test.js
+
