@@ -22,8 +22,6 @@ if (!['testnet', 'mainnet', 'development', 'staging', 'ganache', 'xdai'].include
 
 const constants = require('../constants.js')[network];
 
-console.log(`Loaded constants: ${JSON.stringify(constants, null, 4)}`);
-
 // Load web3
 const web3 = new Web3(new Web3.providers.HttpProvider(constants.rpc_endpoint));
 
