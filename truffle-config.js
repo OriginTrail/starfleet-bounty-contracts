@@ -28,6 +28,8 @@ const testnetRpcEndpoint = constants.testnet.rpc_endpoint;
 const testnetPrivateKey = constants.testnet.account ? constants.testnet.account.privateKey : '';
 const xdaiRpcEndpoint = constants.xdai.rpc_endpoint;
 const xdaiPrivateKey = constants.xdai.account ? constants.xdai.account.privateKey : '';
+const stagingRpcEndpoint = constants.staging.rpc_endpoint;
+const stagingPrivateKey = constants.staging.account ? constants.staging.account.privateKey : '';
 
  module.exports = {
   /**
@@ -95,6 +97,14 @@ const xdaiPrivateKey = constants.xdai.account ? constants.xdai.account.privateKe
         gasPrice: 1000000000,
         confirmations: 2,    // # of confs to wait between deployments. (default: 0)
         timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+        skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    },
+    staging: {
+        provider: () => new HDWalletProvider(stagingPrivateKey, stagingRpcEndpoint),
+        network_id: 100,       // Ethereum's id
+        gas: 3500000,
+        gasPrice: 1000000000,
+        websockets: false,
         skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     },
     // Useful for private networks
