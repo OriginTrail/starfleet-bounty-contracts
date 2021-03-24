@@ -9,7 +9,7 @@ contract StarfleetBounty is Ownable {
     using SafeMath for uint256;
     IERC677 token;
 
-    address public constant TRAC_TOKEN_ADDRESS = 0x18F75411914f45665f352908F1D3D11f0Eb01f2A;
+    address public constant TRAC_TOKEN_ADDRESS = 0xEddd81E0792E764501AaE206EB432399a0268DB5;
 
     // Official start time of the bounty period
     uint256 public constant BOUNTY_PERIOD_LENGTH = 90 days;
@@ -94,8 +94,9 @@ contract StarfleetBounty is Ownable {
 
     // Functional requirement FR2
     function withdrawTokens() public {
-        require(now <= bounty_period_end, "Bounty period has closed, cannot withdraw tokens anymore!");
         require(withdrawals_enabled, "Withdrawals are disabled at this time!");
+        require(now <= bounty_period_end, "Bounty period has closed, cannot withdraw tokens anymore!");
+        require(!bountyClaimed[msg.sender], "User has already claimed their bounty!");
 
         uint256 amount = bounty[msg.sender];
         bounty[msg.sender] = 0;
