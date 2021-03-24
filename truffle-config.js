@@ -88,8 +88,8 @@ const xdaiPrivateKey = constants.xdai.account ? constants.xdai.account.privateKe
         timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
         skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     },
-    xDai: {
-        provider: () => new HDWalletProvider(xdaiPrivatekey, xdaiRpcEndpoint),
+    xdai: {
+        provider: () => new HDWalletProvider(xdaiPrivateKey, xdaiRpcEndpoint),
         network_id: 100,       // Ethereum's id
         gas: 5500000,
         gasPrice: 1000000000,

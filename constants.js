@@ -24,7 +24,7 @@ if (fs.existsSync(walletFilepath)) {
 walletFilepath = `./metadata/xdai_wallet.json`;
 let xdai_wallet;
 if (fs.existsSync(walletFilepath)) {
-    mainnet_wallet = JSON.parse(fs.readFileSync(walletFilepath, { encoding: 'utf-8' }));
+    xdai_wallet = JSON.parse(fs.readFileSync(walletFilepath, { encoding: 'utf-8' }));
 }
 
 
@@ -63,30 +63,26 @@ if (fs.existsSync(addressFilepath)) {
 module.exports = {
     ganache: {
         rpc_endpoint : 'http://127.0.0.1:7545',
-        start_time: 1613579313,
         account: ganache_wallet,
         bounty_address: ganache_address,
         owner_address: '0x238F1746F5b5E31fF71306084324E26d922447d4',
     },
     development: {
         rpc_endpoint : 'http://127.0.0.1:8545',
-        start_time: 1613579313,
         account: development_wallet,
         bounty_address: development_address,
         token_address: '0x26B4902B69d032561d956c0036866f012365e405',
         owner_address: '0x238F1746F5b5E31fF71306084324E26d922447d4',
     },
     testnet: {
-        rpc_endpoint : `${process.env.TESTNET_RPC_ENDPOINT}`,
-        start_time: 1613579772,
+        rpc_endpoint : `${process.env.XDAI_RPC_ENDPOINT}`,
         account: testnet_wallet,
         bounty_address: testnet_address,
         owner_address: `${process.env.TESTNET_OWNER_ADDRESS}`,
-        token_address: '0x98d9A611Ad1b5761bdC1dAAc42c48E4d54CF5882',
+        token_address: '0x18F75411914f45665f352908F1D3D11f0Eb01f2A',
     },
     mainnet: {
         rpc_endpoint : `${process.env.MAINNET_RPC_ENDPOINT}`,
-        start_time: 1613660400,
         account: mainnet_wallet,
         bounty_address: '0x14b9cc4a9a2382d5c5c2b38e6763e51d8fda3777',
         owner_address: `${process.env.MAINNET_OWNER_ADDRESS}`,
@@ -94,10 +90,9 @@ module.exports = {
     },
     xdai: {
         rpc_endpoint : `${process.env.XDAI_RPC_ENDPOINT}`,
-        start_time: 1613660400,
         account: xdai_wallet,
-        bounty_address: '0x14b9cc4a9a2382d5c5c2b38e6763e51d8fda3777',
+        bounty_address: xdai_address,
         owner_address: `${process.env.XDAI_OWNER_ADDRESS}`,
-        token_address: '0xaA7a9CA87d3694B5755f213B5D04094b8d0F0A6F',
+        token_address: '0x18F75411914f45665f352908F1D3D11f0Eb01f2A',
     },
 };

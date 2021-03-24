@@ -79,7 +79,7 @@ async function main() {
 
     const receiver = '0xaeAfe9f7842E98e31053C926C848A3291A35bB95';
     const receiverPK = '0x1ae91aa113828d346a9030d08a2f6d0ff8af57de4634d4fb6473fbd380740d25';
-    let allowed = await bountyContract.methods.bounty(receiver).call();
+    let allowed = await bountyContract.methods.getContributorBounty(receiver).call();
     console.log(`Initial allowed: ${allowed}`);
 
     let data = bountyContract.methods.stakeTokens([receiver], ["1000000000000000000"], true).encodeABI();
@@ -94,7 +94,7 @@ async function main() {
     let createReceipt = await web3.eth.sendSignedTransaction(createTransaction.rawTransaction);
     console.log(JSON.stringify(createReceipt, null, 4));
 
-    allowed = await bountyContract.methods.bounty(receiver).call();
+    allowed = await bountyContract.methods.getContributorBounty(receiver).call();
     console.log(`Allowed after deposit: ${allowed}`);
 
     balance = await tokenContract.methods.balanceOf(receiver).call();
